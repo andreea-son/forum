@@ -1,0 +1,85 @@
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 12px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+    font-family: 'Montserrat', sans-serif;
+    --green: #007e5f;
+    --grey: #3d3d3d;
+    --white: #c3c3c3;
+}
+
+.table {
+    margin-top: 1rem !important;
+    border: 1px;
+    border-style: solid !important;
+    border-color: #b59d01 !important;
+}
+
+#cat-img, .img-movie{
+    border-radius: 20px;
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+#cat-img:hover, .img-movie:hover {
+    transform: scale(1.05);
+    opacity: 0.75;
+}
+
+a.text-link {
+    text-decoration: none;
+    position: relative;
+    display: inline-block;
+    transition: all 0.3s ease-out;
+}
+
+a.text-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    width: 100%;
+    background-color: var(--white);
+    transition: all 0.3s ease-out;
+}
+
+a.text-link:hover::after {
+    left: 100%;
+    width: 0;
+}
+
+input[type=file]::file-selector-button {
+    background-color: var(--grey);
+    color: var(--white);
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.form-control {
+    background-color: var(--white);
+    border: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}

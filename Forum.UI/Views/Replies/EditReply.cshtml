@@ -1,0 +1,37 @@
+﻿@model Forum.Dto.Reply
+<div class="row">
+    <div class="mx-auto">
+        <h1 style="font-size: 2.5em; font-weight: 800;" class="text-center">
+            Edit Reply
+        </h1>
+        <form id="createReply" asp-controller="Replies" asp-action="EditReply" method="post">
+            <div class="container">
+                <div class="mx-auto w-50">
+                    <div class="form-group">
+                        <label asp-for="Message" class="control-label">Message</label>
+                        <textarea asp-for="Message" class="form-control bg-light" style="height:300px;"></textarea>
+                        <span asp-validation-for="Message" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="text-left">
+                        <button class="btn btn-primary" type="submit">Edit reply</button>
+                    </div>
+                </div>
+            </div>
+            @if (!ViewData.ModelState.IsValid)
+            {
+                if (ViewData.ModelState[string.Empty] != null)
+                {
+                    <div class="error-summary">
+                        @foreach (var error in ViewData.ModelState[string.Empty].Errors)
+                        {
+                            <div class="error-item text-danger">
+                                @error.ErrorMessage
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        </form>
+    </div>
+</div>

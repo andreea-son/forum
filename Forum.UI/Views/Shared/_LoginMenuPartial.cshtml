@@ -1,0 +1,21 @@
+﻿@using Forum.UI.Controllers
+@{
+}
+@if (HomeController.LoggedUser != null)
+{
+    <li class="nav-item">
+        <a class="nav-link text-light btn btn-transparent" asp-area="" asp-controller="Profiles" asp-route-id="@HomeController.LoggedUser.Id" asp-action="ViewProfile">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-light btn btn-transparent" asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-light btn btn-transparent" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-light btn btn-transparent" asp-area="" asp-controller="Home" asp-action="Register">Register</a>
+    </li>
+}

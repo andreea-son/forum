@@ -1,0 +1,15 @@
+version: '3'
+services:
+  forum:
+    container_name: forum
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8000:80
+    networks:
+      - npm-network
+
+networks:
+  npm-network:
+    external: true

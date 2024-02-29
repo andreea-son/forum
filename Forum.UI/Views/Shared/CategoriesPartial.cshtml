@@ -1,0 +1,27 @@
+﻿@using System;
+@using System.IO;
+@model IEnumerable<Category>
+<h1 class="text-center mb-5">Browse Categories</h1>
+@if (Model != null)
+{
+    @foreach (var category in Model)
+    {
+        string? picName = category.Name + ".png";
+        if (category.Name != "Movies" && category.Name != "TV Series")
+        {
+            picName = "default_category.png";
+        }
+
+        <div class="container mb-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-2 mb-2">
+                    <a asp-action="GetSubjects" asp-controller="Subjects" asp-route-id="@category.Id"><img id="cat-img" style="width: 150px; height: auto;" src="~/images/@picName"></a>
+                </div>
+                <div class="col-lg-10">
+                    <a class="text-light text-link" asp-action="GetSubjects" asp-controller="Subjects" asp-route-id="@category.Id"><h5 style="text-align: left" class="mb-0 pb-0">@category.Name</h5></a>
+                    <div style="text-align: left" class="mt-2">@category.Description</div>
+                </div>
+            </div>
+        </div>
+    }
+}

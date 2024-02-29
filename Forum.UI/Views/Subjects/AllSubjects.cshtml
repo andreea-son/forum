@@ -1,0 +1,152 @@
+﻿@using Forum.UI.Controllers;
+@using Forum.Dto;
+@using Forum.UI.Models;
+@using Forum;
+
+@model string
+@{
+    ViewData["Title"] = "Subjects";
+    List<Forum.UI.Models.Subject> subjects = ViewBag.subjects;
+    Dictionary<Forum.UI.Models.Subject, Forum.Dto.Movie> myMovieDictionary = ViewBag.movies_dict;
+    Dictionary<Forum.UI.Models.Subject, Forum.Dto.TvSeries> myTvSeriesDictionary = ViewBag.tv_series_dict;
+    int categoryId = ViewBag.categoryId;
+}
+    <h1 style="font-size: 2.5em; font-weight: 800;" class="text-center mb-5">
+        Subjects    
+        @if (HomeController.LoggedUser != null)
+        {
+            <a class="btn btn-primary" asp-area="" asp-controller="Subjects" asp-action="AddSubject" asp-route-id="@categoryId" title="Add Subject">Add Subject</a>
+        }
+    </h1>
+@if (Model == "Movies")
+{
+    @if (myMovieDictionary.Count == 0)
+    {
+        <div class="mx-auto">
+            <p class="text-center">No subjects yet.</p>
+        </div>
+    }
+    else
+    {
+        @foreach (KeyValuePair<Forum.UI.Models.Subject, Forum.Dto.Movie> kvp in myMovieDictionary)
+        {
+            <div class="container mb-5">
+                <div class="row justify-content-center ps-2">
+                    <div class="col-xl-3 pb-3">
+                        <a asp-action="GetReplies" asp-controller="Replies" asp-route-id="@kvp.Key.Id" title="Browse subject"><img style="width: 250px; height: auto;" class="img-movie" src="@kvp.Value.Poster"></a>
+                    </div>
+                
+                    <div class="col-xl-9">
+                        <a asp-action="GetReplies" asp-controller="Replies" asp-route-id="@kvp.Key.Id" title="Browse subject" class="text-link text-light"><h5 class="mb-0 pb-0">@kvp.Key.Title</h5></a>
+                        <div>@kvp.Key.Message</div>
+                        @{
+                            List<string> months = new List<string>();
+                            string[] temp = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+                            months.AddRange(temp);
+
+                            DateTime? dataInitiala = @kvp.Key.Created;
+                            DateTime dateTime = dataInitiala ?? DateTime.MinValue;
+                            string ziSaptamana = dateTime.DayOfWeek.ToString();
+                            int ziLuna = dateTime.Day;
+                            int luna = dateTime.Month;
+                            int an = dateTime.Year;
+                            string data = ziSaptamana + ", " + ziLuna + " " + months[luna - 1] + " " + an;
+                        }
+                        <div class="text-success">@data</div>
+                        @if (HomeController.LoggedUser != null && (HomeController.LoggedUser.UserType == Forum.UserTypes.Admin || HomeController.LoggedUser.Id == @kvp.Key.UserId))
+                        {
+                            <a style="padding: 10px;" asp-action="DeleteSubject" asp-controller="Subjects" asp-route-id="@kvp.Key.Id" type="button" title="Delete" class="btn btn-primary text-light"><i class="fa-solid fa-trash-can"></i></a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+}
+
+@if (Model == "TV Series")
+{
+    @if (myTvSeriesDictionary.Count == 0)
+    {
+        <div class="mx-auto">
+            <p class="text-center">No subjects yet.</p>
+        </div>
+    }
+    else
+    {
+        @foreach (KeyValuePair<Forum.UI.Models.Subject, Forum.Dto.TvSeries> kvp in myTvSeriesDictionary)
+        {
+            <div class="container mb-5">
+                <div class="row justify-content-center ps-2">
+                    <div class="col-xl-3 pb-3">
+                        <a asp-action="GetReplies" asp-controller="Replies" asp-route-id="@kvp.Key.Id" title="Browse subject"><img style="width: 250px; height: auto;" class="img-movie" src="@kvp.Value.Poster"></a>
+                    </div>
+
+                    <div class="col-xl-9">
+                        <a asp-action="GetReplies" asp-controller="Replies" asp-route-id="@kvp.Key.Id" title="Browse subject" class="text-link text-light"><h5 class="mb-0 pb-0">@kvp.Key.Title</h5></a>
+                        <div>@kvp.Key.Message</div>
+                        @{
+                            List<string> months = new List<string>();
+                            string[] temp = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+                            months.AddRange(temp);
+
+                            DateTime? dataInitiala = @kvp.Key.Created;
+                            DateTime dateTime = dataInitiala ?? DateTime.MinValue;
+                            string ziSaptamana = dateTime.DayOfWeek.ToString();
+                            int ziLuna = dateTime.Day;
+                            int luna = dateTime.Month;
+                            int an = dateTime.Year;
+                            string data = ziSaptamana + ", " + ziLuna + " " + months[luna - 1] + " " + an;
+                        }
+                        <div class="text-success">@data</div>
+                        @if (HomeController.LoggedUser != null && (HomeController.LoggedUser.UserType == Forum.UserTypes.Admin || HomeController.LoggedUser.Id == @kvp.Key.UserId))
+                        {
+                            <a style="padding: 10px;" asp-action="DeleteSubject" asp-controller="Subjects" asp-route-id="@kvp.Key.Id" type="button" title="Delete" class="btn btn-primary text-light"><i class="fa-solid fa-trash-can"></i></a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+}
+@if (Model != "TV Series" && Model != "Movies")
+{
+    @if (subjects.Count == 0)
+    {
+        <div class="mx-auto">
+            <p class="text-center">No subjects yet.</p>
+        </div>
+    }
+    else
+    {
+        @foreach (Forum.UI.Models.Subject subject in subjects)
+        {
+            <div class="container mb-5">
+                <div class="row justify-content-center">
+                    <div>
+                        <a asp-action="GetReplies" asp-controller="Replies" asp-route-id="@subject.Id" title="Browse subject" class="text-light" style="text-decoration: none"><h5 class="mb-0 pb-0"><i class="fa-solid fa-eye text-success"></i> @subject.Title</h5></a>
+                        <div>@subject.Message</div>
+                        @{
+                            List<string> months = new List<string>();
+                            string[] temp = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+                            months.AddRange(temp);
+
+                            DateTime? dataInitiala = @subject.Created;
+                            DateTime dateTime = dataInitiala ?? DateTime.MinValue;
+                            string ziSaptamana = dateTime.DayOfWeek.ToString();
+                            int ziLuna = dateTime.Day;
+                            int luna = dateTime.Month;
+                            int an = dateTime.Year;
+                            string data = ziSaptamana + ", " + ziLuna + " " + months[luna - 1] + " " + an;
+                        }
+                        <div class="text-success">@data</div>
+                        @if (HomeController.LoggedUser != null && (HomeController.LoggedUser.UserType == Forum.UserTypes.Admin || HomeController.LoggedUser.Id == subject.UserId))
+                        {
+                            <a style="padding: 10px;" asp-action="DeleteSubject" asp-controller="Subjects" asp-route-id="@subject.Id" type="button" title="Delete" class="btn btn-primary text-light"><i class="fa-solid fa-trash-can"></i></a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+}

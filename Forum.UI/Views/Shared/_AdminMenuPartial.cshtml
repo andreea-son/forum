@@ -1,0 +1,15 @@
+﻿@using Forum.UI.Controllers
+
+
+@if (HomeController.LoggedUser != null && HomeController.LoggedUser.UserType == Forum.UserTypes.Admin)
+{
+    <li class="nav-item">
+        <a class="nav-link text-light btn btn-transparent" asp-area="" asp-controller="Categories" asp-action="AllCategories">Categories</a>
+    </li>    
+}
+else if (HomeController.LoggedUser != null && HomeController.LoggedUser.UserType == Forum.UserTypes.Moderator)
+{
+    <li class="nav-item">
+        <a class="nav-link text-light btn btn-transparent" asp-area="" asp-controller="Categories" asp-action="AllCategories">Moderation</a>
+    </li>    
+}

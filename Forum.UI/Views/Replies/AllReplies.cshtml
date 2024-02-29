@@ -1,0 +1,171 @@
+﻿@using Forum.UI.Controllers
+@using static Forum.Subjects;
+@model IEnumerable<Reply>
+@{
+    ViewData["Title"] = "Replies";
+    string? category = ViewBag.category;
+    Subject subject = ViewBag.subject;
+}
+
+@if(category == "Movies")
+{
+    Forum.Dto.Movie movie = ViewBag.movie;
+    <div class="container mb-5">
+        <div class="row justify-content-center">
+            <h1 class="text-center mb-5">Topic</h1>
+            <div class="col-6">
+                <a href="@movie.Link" target="_blank"><img class="w-100" style="border-radius: 20px" title="Visit on TMDB" src="@movie.Poster" /></a>
+            </div>
+            <div class="col-6">
+                <h3>@movie.Title <span style="font-size: 1rem;"><i class="fa-regular fa-clock text-success"></i> @movie.Duration mins</span></h3>
+               
+                @{
+                    List<string> months = new List<string>();
+                    string[] temp = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+                    months.AddRange(temp);
+
+                    DateTime? dataInitiala = movie.ReleaseDate;
+                    DateTime dateTime = dataInitiala ?? DateTime.MinValue;
+                    int ziLuna = dateTime.Day;
+                    int luna = dateTime.Month;
+                    int an = dateTime.Year;
+                    string data = ziLuna + " " + months[luna - 1] + " " + an;
+                }
+                <div style="font-size: 0.9rem"><span>@movie.Genre</span> <i class="fa-solid fa-circle fa-2xs text-primary"></i> <span>@data</span></div>
+                <br>
+                <h5 class="text-success">Description</h5>
+                <div>@movie.Description</div>
+                <br>
+                <h5 class="text-success">Actors</h5>
+                <div>@movie.Actors</div>
+                <br>
+                <h5 class="text-success">Score on TMDB</h5>
+                @{
+                    float movieScore = movie.Score * 10;
+                }
+                <div class="progress bg-light" style="height: 15px; width: 200px">
+                    <div class="progress-bar bg-success text-light" role="progressbar" style="width: calc(@movieScore / 100 * 100%); font-weight: bold" aria-valuenow="@movieScore" aria-valuemin="0" aria-valuemax="100">@movieScore%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if(category == "TV Series")
+{
+    Forum.Dto.TvSeries tvSeries = ViewBag.tv_series;
+    <div class="container mb-5">
+        <div class="row justify-content-center">
+            <h1 class="text-center mb-5">Topic</h1>
+            <div class="col-6">
+                <a href="@tvSeries.Link" target="_blank"><img class="w-100" style="border-radius: 20px" title="Visit on TMDB" src="@tvSeries.Poster" /></a>
+            </div>
+            <div class="col-6">
+                @{
+                    string? aux;
+                    if (tvSeries.NumberOfSeasons == 1)
+                    {
+                        aux = "season";
+                    }
+                    else
+                    {
+                        aux = "seasons";
+                    }
+                }
+                <h3>@tvSeries.Title <span style="font-size: 1rem"><i class="fa-regular fa-clock text-success"></i> @tvSeries.NumberOfSeasons @aux</span></h3>
+                @{
+                    List<string> months = new List<string>();
+                    string[] temp = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+                    months.AddRange(temp);
+
+                    DateTime? dataInitiala = tvSeries.FirstAirDate;
+                    DateTime dateTime = dataInitiala ?? DateTime.MinValue;
+                    int ziLuna = dateTime.Day;
+                    int luna = dateTime.Month;
+                    int an = dateTime.Year;
+                    string data = ziLuna + " " + months[luna - 1] + " " + an;
+                }
+                <div style="font-size: 0.9rem"><span>@tvSeries.Genre</span> <i class="fa-solid fa-circle fa-2xs text-primary"></i> <span>@data</span></div>
+                <br>
+                <h5 class="text-success">Description</h5>
+                <div>@tvSeries.Description</div>
+                <br>
+                <h5 class="text-success">Actors</h5>
+                <div>@tvSeries.Actors</div>
+                <br>
+                <h5 class="text-success">Score on TMDB</h5>
+                @{
+                    float seriesScore = tvSeries.Score * 10;
+                }
+                <div class="progress bg-light" style="height: 15px; width: 200px">
+                    <div class="progress-bar bg-success text-light" role="progressbar" style="width: calc(@seriesScore / 100 * 100%); font-weight: bold" aria-valuenow="@seriesScore" aria-valuemin="0" aria-valuemax="100">@seriesScore%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<h1 style="font-size: 2.5em; font-weight: 800;" class="text-center">
+    Replies
+    @if (HomeController.LoggedUser != null)
+    {
+        <a class="btn btn-primary" asp-area="" asp-controller="Replies" asp-action="AddReply" title="Add Reply">Add Reply</a>
+    }
+</h1>
+
+@if (Model.Count() == 1)
+{
+    <div class="mx-auto text-center">
+        <p>No replies yet.</p>
+    </div>
+}
+else
+{
+    <br />
+    bool skipFirst = false;
+    @foreach (var reply in Model)
+    {
+        if(skipFirst == false)
+        {
+            skipFirst = true;
+            continue;
+        }
+        <div class="d-flex justify-content-center align-items-center">
+            <div class="bg-light text-secondary" style="width: 50vw; height: auto; padding: 10px; border-radius: 20px; margin-right: 10px;">
+                <div>
+                    <a asp-action="ViewProfile" asp-controller="Profiles" asp-route-id="@reply.UserId" title="View Profile" class="text-success">@reply.Username</a> says:
+                </div>
+                <div style="word-wrap: break-word; white-space: pre-wrap;">@reply.Message</div>
+                <div style="font-size: 0.8rem">@reply.Created</div>
+                <div class="d-flex align-items-start">
+                    @{
+                        if (HomeController.LoggedUser != null && HomeController.LoggedUser.UserType == Forum.UserTypes.Admin)
+                        {
+                            <a style="padding: 10px;" asp-action="DeleteReply" asp-controller="Replies" asp-route-id="@reply.Id" title="Delete" role="button" class="btn btn-transparent text-primary border-0 ms-0 ps-0"><i class="fa-solid fa-trash-can"></i></a>
+                        }
+                        else if (HomeController.LoggedUser != null && HomeController.LoggedUser.UserType == Forum.UserTypes.Moderator)
+                        {
+                            <a style="padding: 10px;" asp-action="DeleteReply" asp-controller="Replies" asp-route-id="@reply.Id" title="Delete" role="button" class="btn btn-transparent text-primary border-0 ms-0 ps-0"><i class="fa-solid fa-trash-can"></i></a>
+                        }
+                        else if (HomeController.LoggedUser != null && HomeController.LoggedUser.Id == reply.UserId)
+                        {
+                            <a style="padding: 10px;" asp-action="DeleteReply" asp-controller="Replies" asp-route-id="@reply.Id" title="Delete" role="button" class="btn btn-transparent text-primary border-0 ms-0 ps-0"><i class="fa-solid fa-trash-can"></i></a>
+                        }
+
+                        if (HomeController.LoggedUser != null && HomeController.LoggedUser.UserType == Forum.UserTypes.Admin)
+                        {
+                            <a style="padding: 10px;" asp-action="EditReply" asp-controller="Replies" asp-route-id="@reply.Id" title="Edit" role="button" class="btn btn-transparent text-primary border-0 ms-0 ps-0"><i class="fa-solid fa-pen"></i></a>
+                        }
+                        else if (HomeController.LoggedUser != null && HomeController.LoggedUser.UserType == Forum.UserTypes.Moderator)
+                        {
+                            <a style="padding: 10px;" asp-action="EditReply" asp-controller="Replies" asp-route-id="@reply.Id" title="Edit" role="button" class="btn btn-transparent text-primary border-0 ms-0 ps-0"><i class="fa-solid fa-pen"></i></a>
+                        }
+                        else if (HomeController.LoggedUser != null && HomeController.LoggedUser.Id == reply.UserId)
+                        {
+                            <a style="padding: 10px;" asp-action="EditReply" asp-controller="Replies" asp-route-id="@reply.Id" title="Edit" role="button" class="btn btn-transparent text-primary border-0 ms-0 ps-0"><i class="fa-solid fa-pen"></i></a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <br />
+    }
+}

@@ -1,0 +1,115 @@
+﻿@using Forum.UI.Controllers
+@model Forum.UI.Models.Profile
+@{
+    bool canEdit = HomeController.LoggedUser != null && Model != null && Model.UserId == HomeController.LoggedUser.Id;
+    string imagePath = Model != null ? Model.ProfilePhoto : "/images/noimage.png";
+}
+<div class="container">
+    @if(Model != null){
+        <h1 class="text-center">Welcome, @Model.Username!</h1>
+    }
+    <div class="row">
+        <div class="mx-auto w-50">
+            <form id="updateProfile" asp-controller="Profiles" asp-action="UpdateProfile" method="post">
+                <div class="form-group">
+                    <label asp-for="Username" class="control-label">Username</label>                        
+                    <input asp-for="Username" class="form-control bg-light" readonly />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label">Name</label>
+                    @if (canEdit)
+                    {
+                        <input asp-for="Name" class="form-control bg-light" />
+                    }
+                    else
+                    {
+                        <input asp-for="Name" class="form-control bg-light" readonly />
+                    }
+                </div>
+                <br />
+                @if (imagePath == null)
+                    imagePath = "/images/noimage.png";
+                <img src="@imagePath" alt="Profile Image" style="width: 12.5rem; border-radius: 20px" />
+                @if (canEdit)
+                {
+                    <div class="form-group">
+                        <label>Change profile picture</label>
+                        <br>
+                        <input type="file" accept="image/png" />
+                    </div>
+                }
+                <br />
+                <div class="form-group">
+                    <label asp-for="Location" class="control-label">Location</label>
+                    @if (canEdit)
+                    {
+                        <input asp-for="Location" class="form-control bg-light" />
+                    }
+                    else
+                    {
+                        <input asp-for="Location" class="form-control bg-light" readonly />
+                    }
+                </div>
+                <div class="form-group">
+                    <label asp-for="Gender" class="control-label">Gender</label>
+                    @if (canEdit)
+                    {
+                        <input asp-for="Gender" class="form-control bg-light" />
+                    }
+                    else
+                    {
+                        <input asp-for="Gender" class="form-control bg-light" readonly />
+                    }
+                </div>
+                <div class="form-group">
+                    <label asp-for="Age" class="control-label">Age</label>
+                    @if (canEdit)
+                    {
+                        <input type="number" asp-for="Age" class="form-control bg-light" />
+                    }
+                    else
+                    {
+                        <input type="number" asp-for="Age" class="form-control bg-light" readonly />
+                    }
+                    <span asp-validation-for="Age" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Bio" class="control-label">Bio</label>
+                    @if (canEdit)
+                    {
+                        <textarea asp-for="Bio" class="form-control bg-light" style="height:300px;"></textarea>
+                    }
+                    else
+                    {
+                        <textarea asp-for="Bio" class="form-control bg-light" style="height:300px;" readonly></textarea>
+                    }
+                </div>
+                        
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    if (ViewData.ModelState[string.Empty] != null)
+                    {
+                        <div class="error-summary">
+                            @foreach (var error in ViewData.ModelState[string.Empty].Errors)
+                            {
+                                <div class="error-item text-danger">
+                                    @error.ErrorMessage
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+
+                <br />
+
+                @if (canEdit)
+                {
+                    <div class="text-left">
+                        <button class="btn btn-primary" type="submit">Update</button>
+                    </div>
+                }
+            </form>
+        </div>
+    </div>
+</div>

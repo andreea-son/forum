@@ -1,0 +1,16 @@
+﻿@if (Model != null)
+{
+    <div class="text-left ms-3">
+        <h1 class="mb-4">Search results</h1>
+        @foreach (var result in Model)
+        {
+            if (result.IsSubject)
+            {
+                <div class="mb-3">
+                    <a style="padding: 10px; text-decoration: none" asp-action="GoToResult" asp-controller="Search" asp-route-id="@result.Id" title="View details" class="text-light"><i class="fa-solid fa-eye text-success me-2"></i> @result.Result</a>
+                </div>
+            }
+
+        }
+    </div>
+}
